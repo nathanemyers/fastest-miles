@@ -4,14 +4,20 @@ var margin = {top: 20, right: 60, bottom: 50, left: 100};
 var width = 960 - margin.left - margin.right;
 var height = 600 - margin.top - margin.bottom;
 
-function parseTime(time) {
+function min2sec(time) {
   var [min, sec] = time.split(':');
   return (min * 60) + Number(sec);
 }
 
+function sec2min(time) {
+  var min = Math.floor(time / 60);
+  var sec = time % 60;
+  return `${min}:${sec}`;
+}
+
 var csvParser = function(d) {
   return {
-    time: parseTime(d.Time),
+    time: min2sec(d.Time),
     name: d.Name,
     country: d.Country,
     year: new Date(d.Year)
@@ -73,7 +79,8 @@ function buildChart() {
     .attr("height", height + margin.top + margin.bottom);
 
   var xAxis = d3.axisBottom(x);
-  var yAxis = d3.axisLeft(y);
+  var yAxis = d3.axisLeft(y)
+    .tickFormat(sec2min);
 
   var gX = svg.append('g')
     .attr('transform', `translate(0, ${margin.top + height})`)

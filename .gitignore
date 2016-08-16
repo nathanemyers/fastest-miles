@@ -1,3 +1,4 @@
 stylesheets/
 .sass-cache/
 data-raw/
+bower_components/

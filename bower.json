@@ -1,0 +1,25 @@
+{
+  "name": "fastest-mile",
+  "authors": [
+    "Nathan Myers <nathanemyers@gmail.com>"
+  ],
+  "description": "d3 chart of the world records for fastest mile",
+  "main": "chart.js",
+  "keywords": [
+    "d3"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "d3-tip": "^0.7.0",
+    "d3": "^4.2.2"
+  }
+}
