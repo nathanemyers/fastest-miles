@@ -1,1 +1,26 @@
 @import "compass/reset";
+
+.indoor-men {
+  stroke: red;
+  fill: none;
+}
+
+.indoor-women {
+  stroke: blue;
+  fill: none;
+}
+
+.outdoor-men {
+  stroke: orange;
+  fill: none;
+}
+
+.outdoor-women {
+  stroke: purple;
+  fill: none;
+}
+
+.voronoi {
+  fill: none;
+  stroke: none;
+}

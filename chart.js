@@ -65,7 +65,8 @@ function buildChart() {
   var voronoi = d3.voronoi()
     .x(d => x(d.year))
     .y(d => y(d.time))
-    .size([width, height]);
+    .extent([[margin.left, margin.top], 
+      [margin.left + width, margin.top + height]]);
 
   var svg = d3.select('.chart-container').append('svg')
     .attr('width', width + margin.left + margin.right)
@@ -82,37 +83,53 @@ function buildChart() {
     .attr('transform', `translate(${margin.left},0)`)
     .call(yAxis);
 
-  svg.append('path')
-      .datum(indoorWorldMen)
-      .attr('d', d => line(d))
-      .style('fill', 'none')
-      .style('stroke', 'steelblue');
-
-  svg.append('path')
-      .datum(indoorWorldWomen)
-      .attr('d', d => line(d))
-      .style('fill', 'none')
-      .style('stroke', 'red');
-
-  svg.append('path')
-      .datum(outdoorWorldMen)
-      .attr('d', d => line(d))
-      .style('fill', 'none')
-      .style('stroke', 'purple');
-
-  svg.append('path')
-      .datum(outdoorWorldWomen)
-      .attr('d', d => line(d))
-      .style('fill', 'none')
-      .style('stroke', 'orange');
-
-  svg.selectAll('.record-break')
-    .data(allRecords)
+  var indoorMen = svg.append('g')
+      .attr('class', 'indoor-men');
+  indoorMen.selectAll('circle')
+    .data(indoorWorldMen)
     .enter().append('circle')
       .attr("cy", d => y(d.time))
       .attr("cx", d => x(d.year))
-      .attr("r", '3')
-      .style('fill', 'black');
+      .attr("r", '3');
+  indoorMen.append('path')
+      .datum(indoorWorldMen)
+      .attr('d', d => line(d));
+
+  var indoorWomen = svg.append('g')
+      .attr('class', 'indoor-women');
+  indoorWomen.selectAll('circle')
+    .data(indoorWorldWomen)
+    .enter().append('circle')
+      .attr("cy", d => y(d.time))
+      .attr("cx", d => x(d.year))
+      .attr("r", '3');
+  indoorWomen.append('path')
+      .datum(indoorWorldWomen)
+      .attr('d', d => line(d));
+
+  var outdoorMen = svg.append('g')
+      .attr('class', 'outdoor-men');
+  outdoorMen.selectAll('circle')
+    .data(outdoorWorldMen)
+    .enter().append('circle')
+      .attr("cy", d => y(d.time))
+      .attr("cx", d => x(d.year))
+      .attr("r", '3');
+  outdoorMen.append('path')
+      .datum(outdoorWorldMen)
+      .attr('d', d => line(d));
+
+  var outdoorWomen = svg.append('g')
+      .attr('class', 'outdoor-women');
+  outdoorWomen.selectAll('circle')
+    .data(outdoorWorldWomen)
+    .enter().append('circle')
+      .attr("cy", d => y(d.time))
+      .attr("cx", d => x(d.year))
+      .attr("r", '3');
+  outdoorWomen.append('path')
+      .datum(outdoorWorldWomen)
+      .attr('d', d => line(d));
 
   svg.selectAll('.voronoi')
     .data(voronoi.polygons(allRecords))
