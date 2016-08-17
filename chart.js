@@ -162,8 +162,22 @@ function buildChart() {
     .append('path')
       .attr('d', d => d ? "M" + d.join("L") + "Z" : null)
       .on('mouseover', (d) => {
-        tip.show(d, document.getElementById(d.data.id));
+        var bubble = document.getElementById(d.data.id);
+        TweenMax.fromTo(`#${d.data.id}`, 0.2, {
+          scale: 0
+        }, {
+          ease: Back.easeOut.config(4),
+          opacity: 1,
+          scale: 1
+        });
+        tip.offset([-15,0]);
+        tip.show(d, bubble);
       })
-      .on('mouseout', tip.hide);
+    .on('mouseout', (d) => {
+      TweenMax.to(`#${d.data.id}`, 0.2, {
+        scale: 0
+      });
+      tip.hide();
+    });
 
 }

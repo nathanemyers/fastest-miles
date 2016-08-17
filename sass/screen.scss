@@ -1,37 +1,54 @@
 @import "compass/reset";
+$indoor-men: red;
+$indoor-women: blue;
+$outdoor-men: orange;
+$outdoor-women: purple;
 
 circle {
-  stroke: none;
+  //stroke: none;
+  opacity: 0;
 }
 
 .indoor-men {
-  stroke: red;
+  stroke: $indoor-men;
   fill: none;
+  circle {
+    fill: $indoor-men;
+  }
 }
 
 .indoor-women {
-  stroke: blue;
+  stroke: $indoor-women;
   fill: none;
+  circle {
+    fill: $indoor-women;
+  }
 }
 
 .outdoor-men {
-  stroke: orange;
+  stroke: $outdoor-men;
   fill: none;
+  circle {
+    fill: $outdoor-men;
+  }
 }
 
 .outdoor-women {
-  stroke: purple;
+  stroke: $outdoor-women;
   fill: none;
+  circle {
+    fill: $outdoor-women;
+  }
 }
 
 .voronoi {
   fill: none;
-  stroke: gold;
+  stroke: none;
   pointer-events: all;
 }
 
 .tooltip {
-  pointer-events: none;
+  pointer-events: none !important;
   line-height: 1;
   font-weight: bold;
   padding: 12px;
