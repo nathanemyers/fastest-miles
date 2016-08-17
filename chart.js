@@ -49,10 +49,6 @@ window.ondload = d3.queue()
   .await(buildChart);
 
 function buildChart() {
-  console.log(indoorWorldMen);
-  console.log(indoorWorldWomen);
-  var allRecords = indoorWorldMen.concat(indoorWorldWomen, outdoorWorldMen, outdoorWorldWomen);
-
   var x = d3.scaleTime()
     //.domain(d3.extent(indoorWorldMen, d => d.year))
     .domain([new Date('April 25 1885'), new Date()])
@@ -63,16 +59,25 @@ function buildChart() {
     .domain([320, 220])
     .range([margin.top, margin.top + height]);
 
-
   var line = d3.line()
     .x(d => x(d.year))
     .y(d => y(d.time));
 
+  var allRecords = indoorWorldMen.concat(indoorWorldWomen, outdoorWorldMen, outdoorWorldWomen);
   var voronoi = d3.voronoi()
     .x(d => x(d.year))
     .y(d => y(d.time))
     .extent([[margin.left, margin.top], 
       [margin.left + width, margin.top + height]]);
+
+  var tip = d3.tip()
+    .attr('class', 'tooltip')
+    .html(d => `
+    <div class='name'>${d.data.name} - ${d.data.country}</div>
+    <img class='flag' width='100px' src='assets/${d.data.country}.svg'></img>
+    <div class='time'>${d.data.time}</div>
+    <div class='year'>${d.data.year}</div>
+    `);
 
   var svg = d3.select('.chart-container').append('svg')
     .attr('width', width + margin.left + margin.right)
@@ -138,11 +143,17 @@ function buildChart() {
       .datum(outdoorWorldWomen)
       .attr('d', d => line(d));
 
+  svg.call(tip);
+
   svg.selectAll('.voronoi')
     .data(voronoi.polygons(allRecords))
     .enter().append('g')
       .attr('class', 'voronoi')
     .append('path')
-      .attr('d', d => d ? "M" + d.join("L") + "Z" : null);
+      .attr('d', d => d ? "M" + d.join("L") + "Z" : null)
+      .on('mouseover', (d) => {
+        tip.show(d);
+      })
+      .on('mouseout', tip.hide);
 
 }
