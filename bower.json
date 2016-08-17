@@ -21,6 +21,8 @@
   "dependencies": {
     "d3-tip": "^0.7.0",
     "d3": "^4.2.2",
-    "gsap": "greensock#^1.19.0"
+    "gsap": "greensock#^1.19.0",
+    "font-awesome": "^4.6.3",
+    "moment": "^2.14.1"
   }
 }

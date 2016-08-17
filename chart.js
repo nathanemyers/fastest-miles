@@ -24,7 +24,7 @@ var csvParser = function(d) {
     minutes: d.Time,
     name: d.Name,
     country: d.Country,
-    year: new Date(d.Year)
+    year: new moment(d.Year, 'MMMM DD YYYY')
   };
 };
 
@@ -55,7 +55,7 @@ window.ondload = d3.queue()
 function buildChart() {
   var x = d3.scaleTime()
     //.domain(d3.extent(indoorWorldMen, d => d.year))
-    .domain([new Date('April 25 1885'), new Date()])
+    .domain([new moment('April 25 1885', 'MMMM DD YYYY'), new moment()])
     .range([margin.left, margin.left + width]);
 
   var y = d3.scaleLinear()
@@ -147,10 +147,12 @@ function buildChart() {
   var tip = d3.tip()
     .attr('class', 'tooltip')
     .html(d => `
-    <img class='flag' width='100px' src='assets/${d.data.country}.svg'></img>
-    <div class='name'>${d.data.name} - ${d.data.country}</div>
-    <div class='time'>${d.data.minutes}</div>
-    <div class='year'>${d.data.year}</div>
+    <img class='flag' src='assets/${d.data.country}.svg'></img>
+    <div class='tooltip-data'>
+      <div class='name'>${d.data.name}</div>
+      <div class='time'><i class="fa fa-clock-o" aria-hidden="true"></i> ${d.data.minutes}</div>
+      <div class='year'>${d.data.year}</div>
+    </div>
     `);
 
   svg.call(tip);
@@ -173,10 +175,10 @@ function buildChart() {
         if (d.data.seconds > 300) {
           tip.offset([15,0]);
           tip.direction('s');
-        } else if (d.data.year < new Date('January 30 1906') ) {
+        } else if (d.data.year < new moment('January 30 1906', 'MMMM DD YYYY') ) {
           tip.offset([0,15]);
           tip.direction('e');
-        } else if (d.data.year > new Date('January 30 2000')) {
+        } else if (d.data.year > new moment('January 30 2000', 'MMMM DD YYYY')) {
           tip.offset([0,-15]);
           tip.direction('w');
         } else {
@@ -189,7 +191,7 @@ function buildChart() {
       TweenMax.to(`#${d.data.id}`, 0.2, {
         scale: 0
       });
-      tip.hide();
+      //tip.hide();
     });
 
 }
