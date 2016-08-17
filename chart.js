@@ -82,7 +82,15 @@ function buildChart() {
     .attr("height", height + margin.top + margin.bottom);
 
   var xAxis = d3.axisBottom(x);
-  var yAxis = d3.axisLeft(y);
+  var yAxis = d3.axisLeft(y)
+    .tickFormat(d => {
+      var m = moment.duration(d, 'seconds');
+      var seconds = m.seconds();
+      if (seconds < 10) {
+        seconds = '0' + seconds;
+      }
+      return `${m.minutes()}:${seconds}`;
+    });
 
   var gX = svg.append('g')
     .attr('transform', `translate(0, ${margin.top + height})`)
@@ -109,7 +117,7 @@ function buildChart() {
       .attr("id", d => d.id)
       .attr("cy", d => y(d.seconds))
       .attr("cx", d => x(d.year))
-      .attr("r", '4');
+      .attr("r", '5');
     return handle;
   }
 
@@ -119,18 +127,25 @@ function buildChart() {
   var indoorWomen = addLine(indoorWorldWomen, 'indoor-women');
 
   /*
+   * Axis Labels
+   */
+  svg.append('text')
+    .attr('class', 'axis-label')
+    .text('Time')
+    .attr('transform',`rotate(-90) translate(-${margin.top + (height / 2)}, ${margin.left / 2})`);
+
+  svg.append('text')
+    .attr('class', 'axis-label')
+    .text('Year')
+    .attr('transform',`translate(${margin.left + (width / 2)}, ${margin.top + height + (margin.bottom )})`);
+  /*
    * Legend
    */
 
   function legendEntry(hostElement, title, cssClass) {
     var entry = hostElement.append('g');
-    //entry.append('rect')
-      //.attr('fill', 'white')
-      //.attr('stroke', 'black')
-      //.attr('width', 20)
-      //.attr('height', 20);
     entry.append('path')
-      .attr('d', 'M2,2L8,10H12L18,18')
+      .attr('d', 'M2,6H10V14H18')
       .attr('class', cssClass + ' line');
     entry.append('text')
       .text(title)
