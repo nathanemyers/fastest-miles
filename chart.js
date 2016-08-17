@@ -150,8 +150,8 @@ function buildChart() {
     <img class='flag' src='assets/${d.data.country}.svg'></img>
     <div class='tooltip-data'>
       <div class='name'>${d.data.name}</div>
+      <div class='year'>${d.data.year.format('MMMM D, YYYY')}</div>
       <div class='time'><i class="fa fa-clock-o" aria-hidden="true"></i> ${d.data.minutes}</div>
-      <div class='year'>${d.data.year}</div>
     </div>
     `);
 

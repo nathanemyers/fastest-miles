@@ -10,7 +10,7 @@
 
 .flag {
   display: inline-block;
-  width: 100px;
+  height: 50px;
 
 }
 
@@ -22,7 +22,6 @@
 }
 
 .name {
-  display: inline-block;
   font-size: 27px;
 }
 
@@ -33,5 +32,6 @@
 }
 
 .year {
+  display: inline-block;
 
 }
