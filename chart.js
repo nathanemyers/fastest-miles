@@ -97,7 +97,7 @@ function buildChart() {
       .attr("id", d => d.id)
       .attr("cy", d => y(d.seconds))
       .attr("cx", d => x(d.year))
-      .attr("r", '3');
+      .attr("r", '4');
   indoorMen.append('path')
       .datum(indoorWorldMen)
       .attr('d', d => line(d));
@@ -110,7 +110,7 @@ function buildChart() {
       .attr("id", d => d.id)
       .attr("cy", d => y(d.seconds))
       .attr("cx", d => x(d.year))
-      .attr("r", '3');
+      .attr("r", '4');
   indoorWomen.append('path')
       .datum(indoorWorldWomen)
       .attr('d', d => line(d));
@@ -123,7 +123,7 @@ function buildChart() {
       .attr("id", d => d.id)
       .attr("cy", d => y(d.seconds))
       .attr("cx", d => x(d.year))
-      .attr("r", '3');
+      .attr("r", '4');
   outdoorMen.append('path')
       .datum(outdoorWorldMen)
       .attr('d', d => line(d));
@@ -136,7 +136,7 @@ function buildChart() {
       .attr("id", d => d.id)
       .attr("cy", d => y(d.seconds))
       .attr("cx", d => x(d.year))
-      .attr("r", '3');
+      .attr("r", '4');
   outdoorWomen.append('path')
       .datum(outdoorWorldWomen)
       .attr('d', d => line(d));
@@ -170,7 +170,19 @@ function buildChart() {
           opacity: 1,
           scale: 1
         });
-        tip.offset([-15,0]);
+        if (d.data.seconds > 300) {
+          tip.offset([15,0]);
+          tip.direction('s');
+        } else if (d.data.year < new Date('January 30 1906') ) {
+          tip.offset([0,15]);
+          tip.direction('e');
+        } else if (d.data.year > new Date('January 30 2000')) {
+          tip.offset([0,-15]);
+          tip.direction('w');
+        } else {
+          tip.direction('n');
+          tip.offset([-15,0]);
+        }
         tip.show(d, bubble);
       })
     .on('mouseout', (d) => {
