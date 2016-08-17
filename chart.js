@@ -4,6 +4,8 @@ var margin = {top: 20, right: 60, bottom: 50, left: 100};
 var width = 960 - margin.left - margin.right;
 var height = 600 - margin.top - margin.bottom;
 
+var xDomain = [new moment('April 25 1885', 'MMMM DD YYYY'), new moment()];
+
 function min2sec(time) {
   var [min, sec] = time.split(':');
   return (min * 60) + Number(sec);
@@ -55,7 +57,7 @@ window.ondload = d3.queue()
 function buildChart() {
   var x = d3.scaleTime()
     //.domain(d3.extent(indoorWorldMen, d => d.year))
-    .domain([new moment('April 25 1885', 'MMMM DD YYYY'), new moment()])
+    .domain(xDomain)
     .range([margin.left, margin.left + width]);
 
   var y = d3.scaleLinear()
@@ -64,6 +66,7 @@ function buildChart() {
     .range([margin.top, margin.top + height]);
 
   var line = d3.line()
+    .curve(d3.curveStepAfter)
     .x(d => x(d.year))
     .y(d => y(d.seconds));
 
@@ -89,57 +92,63 @@ function buildChart() {
     .attr('transform', `translate(${margin.left},0)`)
     .call(yAxis);
 
-  var indoorMen = svg.append('g')
-      .attr('class', 'indoor-men');
-  indoorMen.selectAll('circle')
-    .data(indoorWorldMen)
-    .enter().append('circle')
+  function addLine(data, cssClass) {
+    var handle = svg.append('g')
+      .attr('class', cssClass);
+    handle.append('path')
+      .datum(data)
+      .attr('class', 'line')
+      .attr('d', d => line(d));
+    handle.append('path')
+      .datum(data[data.length - 1])
+      .attr('class', 'tail line')
+      .attr('d', d => `M${x(d.year)},${y(d.seconds)}L${x(xDomain[1])},${y(d.seconds)}`);
+    handle.selectAll('circle')
+      .data(data)
+      .enter().append('circle')
       .attr("id", d => d.id)
       .attr("cy", d => y(d.seconds))
       .attr("cx", d => x(d.year))
       .attr("r", '4');
-  indoorMen.append('path')
-      .datum(indoorWorldMen)
-      .attr('d', d => line(d));
+    return handle;
+  }
 
-  var indoorWomen = svg.append('g')
-      .attr('class', 'indoor-women');
-  indoorWomen.selectAll('circle')
-    .data(indoorWorldWomen)
-    .enter().append('circle')
-      .attr("id", d => d.id)
-      .attr("cy", d => y(d.seconds))
-      .attr("cx", d => x(d.year))
-      .attr("r", '4');
-  indoorWomen.append('path')
-      .datum(indoorWorldWomen)
-      .attr('d', d => line(d));
+  var outdoorMen = addLine(outdoorWorldMen, 'outdoor-men');
+  var outdoorWomen = addLine(outdoorWorldWomen, 'outdoor-women');
+  var indoorMen = addLine(indoorWorldMen, 'indoor-men');
+  var indoorWomen = addLine(indoorWorldWomen, 'indoor-women');
 
-  var outdoorMen = svg.append('g')
-      .attr('class', 'outdoor-men');
-  outdoorMen.selectAll('circle')
-    .data(outdoorWorldMen)
-    .enter().append('circle')
-      .attr("id", d => d.id)
-      .attr("cy", d => y(d.seconds))
-      .attr("cx", d => x(d.year))
-      .attr("r", '4');
-  outdoorMen.append('path')
-      .datum(outdoorWorldMen)
-      .attr('d', d => line(d));
+  /*
+   * Legend
+   */
 
-  var outdoorWomen = svg.append('g')
-      .attr('class', 'outdoor-women');
-  outdoorWomen.selectAll('circle')
-    .data(outdoorWorldWomen)
-    .enter().append('circle')
-      .attr("id", d => d.id)
-      .attr("cy", d => y(d.seconds))
-      .attr("cx", d => x(d.year))
-      .attr("r", '4');
-  outdoorWomen.append('path')
-      .datum(outdoorWorldWomen)
-      .attr('d', d => line(d));
+  function legendEntry(hostElement, title, cssClass) {
+    var entry = hostElement.append('g');
+    //entry.append('rect')
+      //.attr('fill', 'white')
+      //.attr('stroke', 'black')
+      //.attr('width', 20)
+      //.attr('height', 20);
+    entry.append('path')
+      .attr('d', 'M2,2L8,10H12L18,18')
+      .attr('class', cssClass + ' line');
+    entry.append('text')
+      .text(title)
+      .attr('class', 'legend-title')
+      .attr('transform', 'translate(25,15)');
+    return entry;
+  }
+  var legend = svg.append('g')
+      .attr('class', 'legend')
+      .attr('transform', `translate(${margin.left + 50}, ${margin.top + 50})`);
+  legendEntry(legend, "Women's Indoor Mile", 'indoor-women');
+  legendEntry(legend, "Women's Outdoor Mile", 'outdoor-women')
+    .attr('transform', 'translate(0, 25)');
+  legendEntry(legend, "Men's Indoor Mile", 'indoor-men')
+    .attr('transform', 'translate(0, 50)');
+  legendEntry(legend, "Men's Outdoor Mile", 'outdoor-men')
+    .attr('transform', 'translate(0, 75)');
+    
 
   /*
    * Tooltip stuff
@@ -191,7 +200,7 @@ function buildChart() {
       TweenMax.to(`#${d.data.id}`, 0.2, {
         scale: 0
       });
-      //tip.hide();
+      tip.hide();
     });
 
 }

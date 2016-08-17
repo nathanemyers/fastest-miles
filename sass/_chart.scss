@@ -1,42 +1,59 @@
-$indoor-men: red;
-$indoor-women: blue;
-$outdoor-men: orange;
-$outdoor-women: purple;
+$indoor-men: #3182bd;
+$indoor-men-light: #9ecae1;
+$indoor-women: #dd1c77;
+$indoor-women-light: #c994c7;
+$outdoor-men: #756bb1;
+$outdoor-men-light: #bcbddc;
+$outdoor-women: #de2d26;
+$outdoor-women-light: #fc9272;
 
 circle {
   //stroke: none;
   opacity: 0;
 }
 
+.line {
+  fill: none;
+  stroke-width: 2.7;
+}
+
 .indoor-men {
   stroke: $indoor-men;
-  fill: none;
   circle {
     fill: $indoor-men;
+  }
+  .tail {
+    stroke: $indoor-men;
   }
 }
 
 .indoor-women {
   stroke: $indoor-women;
-  fill: none;
   circle {
     fill: $indoor-women;
+  }
+  .tail {
+    stroke: $indoor-women;
   }
 }
 
 .outdoor-men {
   stroke: $outdoor-men;
-  fill: none;
   circle {
     fill: $outdoor-men;
+  }
+  .tail {
+    stroke: $outdoor-men;
   }
 }
 
 .outdoor-women {
   stroke: $outdoor-women;
-  fill: none;
   circle {
     fill: $outdoor-women;
+  }
+  .tail {
+    stroke: $outdoor-women;
   }
 }
 
