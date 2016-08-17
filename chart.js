@@ -9,15 +9,19 @@ function min2sec(time) {
   return (min * 60) + Number(sec);
 }
 
-function sec2min(time) {
-  var min = Math.floor(time / 60);
-  var sec = time % 60;
-  return `${min}:${sec}`;
+function* generateId() {
+  var id = 0;
+  while (true) {
+    yield id++;
+  }
 }
+var gen = generateId();
 
 var csvParser = function(d) {
   return {
-    time: min2sec(d.Time),
+    id: 'point' + gen.next().value,
+    seconds: min2sec(d.Time),
+    minutes: d.Time,
     name: d.Name,
     country: d.Country,
     year: new Date(d.Year)
@@ -61,31 +65,21 @@ function buildChart() {
 
   var line = d3.line()
     .x(d => x(d.year))
-    .y(d => y(d.time));
+    .y(d => y(d.seconds));
 
   var allRecords = indoorWorldMen.concat(indoorWorldWomen, outdoorWorldMen, outdoorWorldWomen);
   var voronoi = d3.voronoi()
     .x(d => x(d.year))
-    .y(d => y(d.time))
+    .y(d => y(d.seconds))
     .extent([[margin.left, margin.top], 
       [margin.left + width, margin.top + height]]);
-
-  var tip = d3.tip()
-    .attr('class', 'tooltip')
-    .html(d => `
-    <div class='name'>${d.data.name} - ${d.data.country}</div>
-    <img class='flag' width='100px' src='assets/${d.data.country}.svg'></img>
-    <div class='time'>${d.data.time}</div>
-    <div class='year'>${d.data.year}</div>
-    `);
 
   var svg = d3.select('.chart-container').append('svg')
     .attr('width', width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom);
 
   var xAxis = d3.axisBottom(x);
-  var yAxis = d3.axisLeft(y)
-    .tickFormat(sec2min);
+  var yAxis = d3.axisLeft(y);
 
   var gX = svg.append('g')
     .attr('transform', `translate(0, ${margin.top + height})`)
@@ -100,7 +94,8 @@ function buildChart() {
   indoorMen.selectAll('circle')
     .data(indoorWorldMen)
     .enter().append('circle')
-      .attr("cy", d => y(d.time))
+      .attr("id", d => d.id)
+      .attr("cy", d => y(d.seconds))
       .attr("cx", d => x(d.year))
       .attr("r", '3');
   indoorMen.append('path')
@@ -112,7 +107,8 @@ function buildChart() {
   indoorWomen.selectAll('circle')
     .data(indoorWorldWomen)
     .enter().append('circle')
-      .attr("cy", d => y(d.time))
+      .attr("id", d => d.id)
+      .attr("cy", d => y(d.seconds))
       .attr("cx", d => x(d.year))
       .attr("r", '3');
   indoorWomen.append('path')
@@ -124,7 +120,8 @@ function buildChart() {
   outdoorMen.selectAll('circle')
     .data(outdoorWorldMen)
     .enter().append('circle')
-      .attr("cy", d => y(d.time))
+      .attr("id", d => d.id)
+      .attr("cy", d => y(d.seconds))
       .attr("cx", d => x(d.year))
       .attr("r", '3');
   outdoorMen.append('path')
@@ -136,12 +133,25 @@ function buildChart() {
   outdoorWomen.selectAll('circle')
     .data(outdoorWorldWomen)
     .enter().append('circle')
-      .attr("cy", d => y(d.time))
+      .attr("id", d => d.id)
+      .attr("cy", d => y(d.seconds))
       .attr("cx", d => x(d.year))
       .attr("r", '3');
   outdoorWomen.append('path')
       .datum(outdoorWorldWomen)
       .attr('d', d => line(d));
+
+  /*
+   * Tooltip stuff
+   */
+  var tip = d3.tip()
+    .attr('class', 'tooltip')
+    .html(d => `
+    <img class='flag' width='100px' src='assets/${d.data.country}.svg'></img>
+    <div class='name'>${d.data.name} - ${d.data.country}</div>
+    <div class='time'>${d.data.minutes}</div>
+    <div class='year'>${d.data.year}</div>
+    `);
 
   svg.call(tip);
 
@@ -152,7 +162,7 @@ function buildChart() {
     .append('path')
       .attr('d', d => d ? "M" + d.join("L") + "Z" : null)
       .on('mouseover', (d) => {
-        tip.show(d);
+        tip.show(d, document.getElementById(d.data.id));
       })
       .on('mouseout', tip.hide);
 
