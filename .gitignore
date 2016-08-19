@@ -2,3 +2,5 @@ stylesheets/
 .sass-cache/
 data-raw/
 bower_components/
+node_modules/
+dist/
