@@ -1,5 +1,8 @@
 /* jshint esnext: true */
 
+var dataUrl = '../data';
+var assetUrl = '../assets';
+
 var margin = {top: 20, right: 60, bottom: 50, left: 100};
 var width = 960 - margin.left - margin.right;
 var height = 600 - margin.top - margin.bottom;
@@ -36,19 +39,19 @@ var outdoorWorldMen;
 var outdoorWorldWomen;
 
 window.ondload = d3.queue()
-  .defer(callback => d3.csv('data/indoor-world-men.csv', csvParser, function(data) {
+  .defer(callback => d3.csv(`${dataUrl}/indoor-world-men.csv`, csvParser, function(data) {
     indoorWorldMen = data;
     callback(null);
   }))
-  .defer(callback => d3.csv('data/indoor-world-women.csv', csvParser, function(data) {
+  .defer(callback => d3.csv(`${dataUrl}/indoor-world-women.csv`, csvParser, function(data) {
     indoorWorldWomen = data;
     callback(null);
   }))
-  .defer(callback => d3.csv('data/outdoor-world-men.csv', csvParser, function(data) {
+  .defer(callback => d3.csv(`${dataUrl}/outdoor-world-men.csv`, csvParser, function(data) {
     outdoorWorldMen = data;
     callback(null);
   }))
-  .defer(callback => d3.csv('data/outdoor-world-women.csv', csvParser, function(data) {
+  .defer(callback => d3.csv(`${dataUrl}/outdoor-world-women.csv`, csvParser, function(data) {
     outdoorWorldWomen = data;
     callback(null);
   }))
@@ -171,7 +174,7 @@ function buildChart() {
   var tip = d3.tip()
     .attr('class', 'tooltip')
     .html(d => `
-    <img class='flag' src='assets/${d.data.country}.svg'></img>
+    <img class='flag' src='${assetUrl}/${d.data.country}.svg'></img>
     <div class='tooltip-data'>
       <div class='name'>${d.data.name}</div>
       <div class='year'>${d.data.year.format('MMMM D, YYYY')}</div>

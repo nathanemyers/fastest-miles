@@ -5,23 +5,29 @@ var minifyCss = require('gulp-minify-css');
 var rev = require('gulp-rev');
 var babel = require('gulp-babel');
 var compass = require('gulp-compass');
+var replace = require('gulp-replace');
+
+var dataUrl = 'foobar';
+var assetUrl = 'foobar';
 
 gulp.task('build', ['moveData', 'moveAssets', 'compileSass'], function() {
-  return gulp.src(['index.html'])
+  return gulp.src(['src/index.html'])
     .pipe(usemin({
       css: [minifyCss()],
       libjs: [uglify()],
-      js: [babel({presets: 'es2015'}), uglify()]
+      js: [replace('\.\.\/data', dataUrl), replace('\.\.\/assets', assetUrl), babel({presets: 'es2015'}), uglify()]
     }))
   .pipe(gulp.dest('dist/'));
 });
 
 gulp.task('compileSass', function() {
-  return gulp.src('sass/*.scss')
+  return gulp.src('src/sass/*.scss')
     .pipe(compass({
-      config_file: './config.rb'
+      config_file: './config.rb',
+      css: 'src/stylesheets',
+      sass: 'src/sass'
     }))
-    .pipe(gulp.dest('stylesheets/'));
+    .pipe(gulp.dest('src/stylesheets/'));
 });
 
 gulp.task('moveData', function() {
