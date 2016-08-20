@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/nathanemyers/fastest-miles",
   "devDependencies": {
+    "babel-polyfill": "^6.13.0",
     "babel-preset-es2015": "^6.13.2",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
@@ -30,6 +31,7 @@
     "gulp-minify-css": "^1.2.4",
     "gulp-replace": "^0.5.4",
     "gulp-rev": "^7.1.2",
+    "gulp-scp2": "^0.2.0",
     "gulp-uglify": "^2.0.0",
     "gulp-usemin": "^0.3.24"
   }
