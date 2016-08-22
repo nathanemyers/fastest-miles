@@ -9,25 +9,11 @@ var babel = require('gulp-babel');
 var polyfill = require('babel-polyfill');
 var compass = require('gulp-compass');
 var replace = require('gulp-replace');
-var scp = require('gulp-scp2');
 
 var secret = JSON.parse(fs.readFileSync('secret.json', 'utf8'));
 
 var dataUrl = secret.dataUrl;
 var assetUrl = secret.assetUrl;
-
-gulp.task('deploy', ['build'], function() {
-  return gulp.src('dist/')
-    .pipe(scp({
-      host: secret.server,
-      username: secret.username,
-      password: secret.password,
-      dest: secret.serverDestination
-    }))
-    .on('error', function(err) {
-      console.log(err);
-    });
-});
 
 gulp.task('build', ['moveData', 'moveAssets', 'compileSass'], function() {
   return gulp.src(['src/index.html'])
