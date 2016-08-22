@@ -3,9 +3,12 @@
 var dataUrl = '../data';
 var assetUrl = '../assets';
 
+var fullWidth = 960;
+var fullHeight = 600;
+
 var margin = {top: 20, right: 60, bottom: 50, left: 100};
-var width = 960 - margin.left - margin.right;
-var height = 600 - margin.top - margin.bottom;
+var width = fullWidth - margin.left - margin.right;
+var height = fullHeight - margin.top - margin.bottom;
 
 var xDomain = [new moment('April 25 1885', 'MMMM DD YYYY'), new moment()];
 
@@ -81,8 +84,8 @@ function buildChart() {
       [margin.left + width, margin.top + height]]);
 
   var svg = d3.select('.chart-container').append('svg')
-    .attr('width', width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom);
+    .attr('viewBox', `0 0 ${fullWidth} ${fullHeight}`)
+    .attr('preserveAspectRatio', 'xMinYMin meet');
 
   var xAxis = d3.axisBottom(x);
   var yAxis = d3.axisLeft(y)
