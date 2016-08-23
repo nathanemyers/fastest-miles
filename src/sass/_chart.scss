@@ -18,18 +18,12 @@ circle {
   circle {
     fill: $indoor-men;
   }
-  .tail {
-    stroke: $indoor-men;
-  }
 }
 
 .indoor-women {
   stroke: $indoor-women;
   circle {
     fill: $indoor-women;
-  }
-  .tail {
-    stroke: $indoor-women;
   }
 }
 
@@ -38,18 +32,12 @@ circle {
   circle {
     fill: $outdoor-men;
   }
-  .tail {
-    stroke: $outdoor-men;
-  }
 }
 
 .outdoor-women {
   stroke: $outdoor-women;
   circle {
     fill: $outdoor-women;
-  }
-  .tail {
-    stroke: $outdoor-women;
   }
 }
 

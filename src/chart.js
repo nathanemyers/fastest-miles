@@ -1,5 +1,6 @@
 /* jshint esnext: true */
 
+// These variables are meant to be overwritten by the gulp build
 var dataUrl = '../data';
 var assetUrl = '../assets';
 
@@ -62,12 +63,10 @@ window.ondload = d3.queue()
 
 function buildChart() {
   var x = d3.scaleTime()
-    //.domain(d3.extent(indoorWorldMen, d => d.year))
     .domain(xDomain)
     .range([margin.left, margin.left + width]);
 
   var y = d3.scaleLinear()
-    //.domain(d3.extent(indoorWorldMen, d => d.time).reverse())
     .domain([320, 220])
     .range([margin.top, margin.top + height]);
 
@@ -144,10 +143,10 @@ function buildChart() {
     .attr('class', 'axis-label')
     .text('Year')
     .attr('transform',`translate(${margin.left + (width / 2)}, ${margin.top + height + (margin.bottom )})`);
+
   /*
    * Legend
    */
-
   function legendEntry(hostElement, title, cssClass) {
     var entry = hostElement.append('g');
     entry.append('path')
